@@ -1,0 +1,94 @@
+#+title: ELisp ASCII Arts
+
+There are two programs, under their separate directory:
+- =ascii=: a small ASCII gallery, displays a star wars asciimation[fn:1]
+  or my favicon
+- =fire=: draws a flaming fire (either black & white or with colors)
+- =bastard-excuses=: generate silly excuses
+
+* ASCII
+
+[[imgs/ascii.gif]]
+
+=ascii.el= starts up a simple interactive server, displaying files under
+=gallery/=.  Each file is a separate "artwork", either an animation or a
+still picture.  The first line of the file indicates its type:
+- For an animation (e.g. =star-wars=), the first line is the title of
+  the animation + space + "A".  The second line has 3 numbers separated
+  by space: frame witdh, frame height, and the length of a time slice
+  (in ms).  For example
+  #+begin_src text
+    Star Wars  A
+    67 13 66.67
+  #+end_src
+  Then each frame follows, for example:
+  #+begin_src text
+    4
+        ..........           @@@@@    @@@@@.......
+         .........          @     @  @     @.......
+          ........             @@@   @     @........
+           .......           @@      @     @  .......
+            ......          @@@@@@@   @@@@@  th ......
+             .....        ----------------------- .....
+              ....          C  E  N  T  U  R  Y     ....
+               ...        -----------------------     ...
+                ..        @@@@@ @@@@@ @   @ @@@@@       ..
+                ==          @   @      @ @    @          ==
+              __||__        @   @@@@    @     @        __||__
+             |      |       @   @      @ @    @       |      |
+    _________|______|_____  @   @@@@@ @   @   @  _____|______|_________
+  #+end_src
+  The first line is a number, indicating the time slice this frame takes
+  (here, 4 units of time, i.e. 66.67 * 4 ms).  Then follows the frame
+  content (here it has 13 lines, and each line has at most 67 chars).
+- For a still picture (e.g. =favicon=), a single character "S" denotes
+  its type.  The rest of the file is simply sent over the socket.  It
+  has the same effect as
+  #+begin_src bash
+    $ tail +2 ascii/gallery/favicon
+  #+end_src
+  Normal images (jpg, png) can be converted to terminal images using
+  [[https://github.com/hzeller/timg][timg]], a terminal image and video viewer.
+
+To start the server, evaluate =ascii.el= and use =netcat= to open port
+21812 of localhost:
+#+begin_src bash
+  nc localhost 21812
+#+end_src
+
+* Fire
+
+[[imgs/fire.png]]
+
+=fire.el= is the main implementation.  It uses emacs network process to
+display fire.  It draw fire one frame at a time, and only draws when
+someone is watching (i.e. connected to the fire server).
+
+The code used to draw file is taken from [[http://aa-project.sourceforge.net/aalib/][AA-lib]], a portable ascii art
+GFX library.  The source is from [[http://prdownloads.sourceforge.net/aa-project/aalib-1.4rc4.tar.gz][=aalib-1.4rc4.tar.gz=]], under
+=aalib-1.4.0/src/aafire.c=.
+
+=fire-starter.el= does two things
+- it byte compiles =fire.el= for better performance, and
+- calls =(fire-start-server)= to start the fire server
+
+=fire-list.el= seems to be a prototype using =echo-server-client=, it
+does not work now.
+
+=raw.c= also draws file, but displays file using raw numbers instead of
+colors.  When the program starts, press enter to start drawing file.
+The font size needs to be very small in order to see the effect.
+
+To see the fire, evaluate =fire-starter.el= and use =netcat= to open
+port 21814 of localhost.
+
+* Bastard Excuses
+
+Two files generate excuses in different ways
+- =bastard-diy-excuse.el= randomly chooses words from separate lists and
+  concats them
+- =bastard-excuse.el= chooses random sentences from =bofh-excuses=
+
+* Footnotes
+
+[fn:1] Taken from http://www.asciimation.co.nz/index.php
