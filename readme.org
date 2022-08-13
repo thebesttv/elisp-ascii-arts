@@ -1,8 +1,8 @@
 #+title: ELisp ASCII Arts
 
-There are two programs, under their separate directory:
-- =ascii=: a small ASCII gallery, displays a star wars asciimation[fn:1]
-  or my favicon
+There are three programs, under their separate directory:
+- =ascii=: a small ASCII gallery, displays a star wars animation (taken
+  from [[http://www.asciimation.co.nz/index.php][ASCIIMATION]]) or a favicon
 - =fire=: draws a flaming fire (either black & white or with colors)
 - =bastard-excuses=: generate silly excuses
 
@@ -88,7 +88,3 @@ Two files generate excuses in different ways
 - =bastard-diy-excuse.el= randomly chooses words from separate lists and
   concats them
 - =bastard-excuse.el= chooses random sentences from =bofh-excuses=
-
-* Footnotes
-
-[fn:1] Taken from http://www.asciimation.co.nz/index.php
